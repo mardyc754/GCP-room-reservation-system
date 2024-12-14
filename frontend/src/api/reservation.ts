@@ -1,11 +1,9 @@
 import { reservationSchema } from "@/schemas/reservation";
+import { customFetch } from "./fetchConfig";
 
 export const getReservationsByUserId = async (userId: number) => {
-  const response = await fetch(
-    `${import.meta.env.VITE_BACKEND_BASE_URL}/reservations/user/${userId}`
+  return await customFetch(
+    `/reservations/user/${userId}`,
+    reservationSchema.array()
   );
-
-  const res = reservationSchema.array().parse(await response.json());
-
-  return res;
 };

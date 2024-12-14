@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   // LoaderFunctionArgs,
   RouterProvider,
@@ -13,7 +13,7 @@ import { Home } from "./pages/Home";
 import { Reservations } from "./pages/Reservations";
 
 import { Navbar } from "./components/Navbar";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { CreateReservation } from "./pages/CreateReservation";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: "/reservations",
     element: <Reservations />,
+  },
+  {
+    path: "/create-reservation",
+    element: <CreateReservation />,
   },
   // {
   //   path: '/books/:bookId',
