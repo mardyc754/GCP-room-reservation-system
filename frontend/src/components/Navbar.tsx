@@ -1,10 +1,11 @@
-import { useCurrentUser } from "@/hooks/auth";
+import { useCurrentUser, useSignOutMutation } from "@/hooks/auth";
 
 export const Navbar = () => {
   const { data } = useCurrentUser();
+  const { mutate: signout } = useSignOutMutation();
 
   return (
-    <nav className="flex p-8 w-full bg-[#aaa] justify-between items-center">
+    <nav className="flex p-8 w-full border-b-2  justify-between items-center shadow-md">
       <div>
         <p className="text-2xl font-semibold">
           <a href="/">Room reservation</a>
@@ -14,6 +15,7 @@ export const Navbar = () => {
         {data ? (
           <>
             <a href="/reservations">Your reservations</a>
+            <button onClick={() => signout()}>Sign out</button>
           </>
         ) : (
           <>

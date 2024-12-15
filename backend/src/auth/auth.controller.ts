@@ -40,7 +40,8 @@ export class AuthController {
     response.cookie('authToken', authToken, {
       httpOnly: true,
       expires: new Date(Date.now() + 2 * 60 * 60 * 1000),
-      sameSite: 'lax',
+      secure: true,
+      sameSite: 'none',
     });
 
     response.status(200).send(user);
@@ -58,17 +59,23 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get('user')
-  getCurrentUser(
-    @Req() req: Request & { user: Omit<User, 'password'> },
-    // @Res() res: Response,
-  ) {
-    return req.user;
+  getCurrentUser(@Req() req: Request & { user: Omit<User, 'password'> }) {
+    return {
+      id: req.user.id,
+      email: req.user.email,
+      username: req.user.username,
+    };
   }
 
   @UseGuards(AuthGuard)
   @Post('sign-out')
-  signOut(@Res({ passthrough: true }) response: Response) {
-    response.clearCookie('authToken');
+  signOut(@Req() req: Request, @Res({ passthrough: true }) response: Response) {
+    response.cookie('authToken', '', {
+      httpOnly: true,
+      expires: new Date(0),
+      secure: true,
+      sameSite: 'none',
+    });
     response.status(200).send({ message: 'Signed out' });
   }
 }

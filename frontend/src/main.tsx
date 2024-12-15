@@ -12,11 +12,9 @@ import "./index.css";
 import { Home } from "./pages/Home";
 import { Reservations } from "./pages/Reservations";
 
-import { Navbar } from "./components/Navbar";
 import { CreateReservation } from "./pages/CreateReservation";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
-import { AuthProvider } from "./hooks/AuthProvider";
 
 const router = createBrowserRouter([
   {
@@ -79,10 +77,7 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <Navbar />
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <RouterProvider router={router} />
     </QueryClientProvider>
   </StrictMode>
 );

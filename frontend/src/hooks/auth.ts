@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { signIn, getCurrentUser, signOut, signUp } from "@/api/auth";
 import {
@@ -13,6 +13,7 @@ import { user } from "@/constants/queryKeys";
 
 export const useSignIn = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const form = useForm<SignInData>({
     resolver: signinResolver,
@@ -21,6 +22,7 @@ export const useSignIn = () => {
   const mutation = useMutation({
     mutationFn: () => signIn(form.getValues()),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: user.current() });
       navigate("/");
     },
     onError: (error) => {
@@ -71,9 +73,12 @@ export const useCurrentUser = () => {
 };
 
 export const useSignOutMutation = () => {
+  const navigate = useNavigate();
+
   return useMutation({
     mutationFn: signOut,
     onSuccess: () => {
+      navigate("/");
       window.location.reload();
     },
     onError: (error) => {
