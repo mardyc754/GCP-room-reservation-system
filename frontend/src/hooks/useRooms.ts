@@ -9,3 +9,13 @@ export const useRooms = () => {
     queryFn: getAllRooms,
   });
 };
+
+export const useRoomById = (roomId: number) => {
+  return useQuery({
+    queryKey: room.byId(roomId),
+    queryFn: async () => {
+      const rooms = await getAllRooms();
+      return rooms.find((room) => room.id === roomId);
+    },
+  });
+};

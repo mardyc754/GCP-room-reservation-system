@@ -14,6 +14,8 @@ import { Reservations } from "./pages/Reservations";
 
 import { Navbar } from "./components/Navbar";
 import { CreateReservation } from "./pages/CreateReservation";
+import { Login } from "./pages/Login";
+import { Signup } from "./pages/Signup";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +29,14 @@ const router = createBrowserRouter([
   {
     path: "/create-reservation",
     element: <CreateReservation />,
+  },
+  {
+    path: "/sign-in",
+    element: <Login />,
+  },
+  {
+    path: "/sign-up",
+    element: <Signup />,
   },
   // {
   //   path: '/books/:bookId',

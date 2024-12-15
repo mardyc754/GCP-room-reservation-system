@@ -7,7 +7,13 @@ export const customFetch = async <T>(
 ) => {
   const response = await fetch(
     `${import.meta.env.VITE_BACKEND_BASE_URL}/${input}`,
-    init
+    {
+      ...init,
+      headers: {
+        "Content-Type": "application/json",
+        ...init?.headers,
+      },
+    }
   );
 
   if (!response.ok) {

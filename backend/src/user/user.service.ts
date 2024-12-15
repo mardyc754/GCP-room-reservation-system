@@ -16,11 +16,27 @@ export class UserService {
   async createUser(email: string, password: string, username: string) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    return await this.drizzleService.db.insert(databaseSchema.users).values({
-      email,
-      password: hashedPassword,
-      username,
-    });
+    try {
+      const users = await this.drizzleService.db
+        .insert(databaseSchema.users)
+        .values({
+          email,
+          password: hashedPassword,
+          username,
+        })
+        .returning();
+
+      return {
+        id: users[0].id,
+        email: users[0].email,
+        username: users[0].username,
+      };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      throw new BadRequestException(
+        'User with this email or username already exists',
+      );
+    }
   }
 
   async login(email: string, password: string) {

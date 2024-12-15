@@ -15,7 +15,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @HttpCode(201)
-  @Post()
+  @Post('/signup')
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(
       createUserDto.email,

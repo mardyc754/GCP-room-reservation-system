@@ -5,4 +5,5 @@ export const reservation = {
 
 export const room = {
   all: ["room"] as const,
+  byId: (roomId: number) => [...room.all, "id", `${roomId}`] as const,
 };
