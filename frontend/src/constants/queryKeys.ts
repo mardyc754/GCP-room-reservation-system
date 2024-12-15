@@ -7,3 +7,8 @@ export const room = {
   all: ["room"] as const,
   byId: (roomId: number) => [...room.all, "id", `${roomId}`] as const,
 };
+
+export const user = {
+  all: ["user"] as const,
+  current: () => [...user.all, "current"] as const,
+};

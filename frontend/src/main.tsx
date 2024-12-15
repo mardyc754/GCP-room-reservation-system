@@ -16,6 +16,7 @@ import { Navbar } from "./components/Navbar";
 import { CreateReservation } from "./pages/CreateReservation";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
+import { AuthProvider } from "./hooks/AuthProvider";
 
 const router = createBrowserRouter([
   {
@@ -78,8 +79,10 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <Navbar />
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <Navbar />
+        <RouterProvider router={router} />
+      </AuthProvider>
     </QueryClientProvider>
   </StrictMode>
 );

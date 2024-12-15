@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { DatabaseModule } from './db/drizzle.module';
 import { APP_PIPE } from '@nestjs/core';
 import { RoomModule } from './room/room.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { RoomModule } from './room/room.module';
       }),
     }),
     RoomModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

@@ -39,31 +39,6 @@ export class UserService {
     }
   }
 
-  async login(email: string, password: string) {
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await this.drizzleService.db
-      .select()
-      .from(databaseSchema.users)
-      .where(eq(databaseSchema.users.email, email));
-
-    if (user.length === 0) {
-      throw new BadRequestException('Invalid username or password');
-    }
-
-    bcrypt.compare(hashedPassword, user[0].password, (err, result) => {
-      if (result) {
-        return {
-          id: user[0].id,
-          email: user[0].email,
-          username: user[0].username,
-        };
-      } else {
-        throw new BadRequestException('Invalid username or password');
-      }
-    });
-  }
-
   async getUserById(id: number) {
     const user = await this.drizzleService.db
       .select()
@@ -80,5 +55,19 @@ export class UserService {
       email: user[0].email,
       username: user[0].username,
     };
+  }
+
+  async getUserByEmail(email: string) {
+    const user = await this.drizzleService.db
+      .select()
+      .from(databaseSchema.users)
+      .where(eq(databaseSchema.users.email, email))
+      .execute();
+
+    if (user.length === 0) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user[0];
   }
 }

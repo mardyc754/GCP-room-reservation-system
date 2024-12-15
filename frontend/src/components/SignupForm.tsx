@@ -1,6 +1,6 @@
 import { Button } from "./Button";
 import { LabelWithInput } from "./LabelWithInput";
-import { useSignup } from "@/hooks/useSignup";
+import { useSignup } from "@/hooks/auth";
 
 export const SignupForm = () => {
   const {
