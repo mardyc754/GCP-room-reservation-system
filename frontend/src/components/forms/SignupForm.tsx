@@ -1,5 +1,5 @@
-import { Button } from "./Button";
-import { LabelWithInput } from "./LabelWithInput";
+import { Button } from "../Button";
+import { LabelWithInput } from "../LabelWithInput";
 import { useSignup } from "@/hooks/auth";
 
 export const SignupForm = () => {
@@ -15,9 +15,6 @@ export const SignupForm = () => {
     <form className="flex flex-col space-y-4" onSubmit={onSubmit}>
       <LabelWithInput
         label="Username"
-        labelProps={{
-          htmlFor: "username",
-        }}
         inputProps={{
           ...register("username", { required: true }),
         }}
@@ -25,9 +22,6 @@ export const SignupForm = () => {
       />
       <LabelWithInput
         label="Email"
-        labelProps={{
-          htmlFor: "email",
-        }}
         inputProps={{
           type: "email",
           ...register("email", { required: true }),
@@ -36,9 +30,6 @@ export const SignupForm = () => {
       />
       <LabelWithInput
         label="Password"
-        labelProps={{
-          htmlFor: "password",
-        }}
         inputProps={{
           type: "password",
           ...register("password", { required: true }),

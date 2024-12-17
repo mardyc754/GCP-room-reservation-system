@@ -42,6 +42,7 @@ export class ReservationService {
     return this.drizzleService.db
       .select({
         id: reservations.id,
+        name: reservations.name,
         userId: reservations.userId,
         roomId: reservations.roomId,
         startDate: reservations.startDate,
@@ -69,19 +70,12 @@ export class ReservationService {
       .fullJoin(rooms, eq(reservations.roomId, rooms.id));
   }
 
-  async createReservation(
-    userId: Reservation['userId'],
-    roomId: Reservation['roomId'],
-    startDate: Reservation['startDate'],
-    endDate: Reservation['endDate'],
-    name: Reservation['name'],
-  ) {
-    return await this.drizzleService.db.insert(reservations).values({
-      userId,
-      roomId,
-      startDate,
-      endDate,
-      name,
-    });
+  async createReservation(data: Omit<Reservation, 'id'>) {
+    const result = await this.drizzleService.db
+      .insert(reservations)
+      .values(data)
+      .returning();
+
+    return result[0];
   }
 }

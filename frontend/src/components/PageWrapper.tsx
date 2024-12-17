@@ -9,11 +9,9 @@ export const PageWrapper = ({ title, children }: PageWrapperProps) => {
   return (
     <>
       <Navbar />
-      <div className="flex flex-col items-center p-8 space-y-8">
+      <div className="flex flex-col p-8 space-y-8">
         <h1 className="text-4xl">{title}</h1>
-        <div className="flex items-center justify-center space-x-8">
-          {children}
-        </div>
+        <div className="grid space-x-8">{children}</div>
       </div>
     </>
   );

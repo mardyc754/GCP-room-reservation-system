@@ -1,7 +1,7 @@
 import { useSignIn } from "@/hooks/auth";
 
-import { Button } from "./Button";
-import { LabelWithInput } from "./LabelWithInput";
+import { Button } from "../Button";
+import { LabelWithInput } from "../LabelWithInput";
 
 export const LoginForm = () => {
   const {
@@ -16,17 +16,11 @@ export const LoginForm = () => {
     <form className="flex flex-col space-y-4" onSubmit={onSubmit}>
       <LabelWithInput
         label="Email"
-        labelProps={{
-          htmlFor: "email",
-        }}
         inputProps={{ ...register("email", { required: true }), type: "email" }}
         errorLabel={errors.email?.message}
       />
       <LabelWithInput
         label="Password"
-        labelProps={{
-          htmlFor: "password",
-        }}
         inputProps={{
           ...register("password", { required: true }),
           type: "password",

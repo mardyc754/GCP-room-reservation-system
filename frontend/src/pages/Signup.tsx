@@ -1,5 +1,5 @@
 import { PageWrapper } from "@/components/PageWrapper";
-import { SignupForm } from "@/components/SignupForm";
+import { SignupForm } from "@/components/forms/SignupForm";
 
 export const Signup = () => {
   return (
