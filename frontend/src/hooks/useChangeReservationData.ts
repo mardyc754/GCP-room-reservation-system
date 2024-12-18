@@ -7,28 +7,40 @@ import { reservation } from "@/constants/queryKeys";
 import {
   ChangeReservationData,
   changeReservationDataResolver,
-  Reservation,
+  FullReservationData,
 } from "@/schemas/reservation";
-import { Room } from "@/schemas/room";
 
 import { useCurrentUser } from "./auth";
+import { formatDateTime } from "@/utils/dateUtils";
 
 type UseChangeReservationDataOptions = {
-  selectedRoomId: Room["id"];
-  reservationId: Reservation["id"];
+  reservationData: FullReservationData;
 };
 
 export const useChangeReservationData = ({
-  selectedRoomId,
-  reservationId,
+  reservationData,
 }: UseChangeReservationDataOptions) => {
   const queryClient = useQueryClient();
+
+  const {
+    id: reservationId,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    username,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    roomName,
+    ...initialFormData
+  } = reservationData;
 
   const navigate = useNavigate();
   const { data: currentUserData } = useCurrentUser();
 
   const methods = useForm<ChangeReservationData>({
     resolver: changeReservationDataResolver,
+    defaultValues: {
+      ...initialFormData,
+      startDate: formatDateTime(new Date(initialFormData.startDate)),
+      endDate: formatDateTime(new Date(initialFormData.endDate)),
+    },
   });
 
   const { handleSubmit, getValues } = methods;
@@ -37,7 +49,6 @@ export const useChangeReservationData = ({
     mutationFn: () =>
       changeReservationData(reservationId, {
         ...getValues(),
-        roomId: selectedRoomId,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({

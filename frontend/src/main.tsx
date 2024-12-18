@@ -41,39 +41,6 @@ const router = createBrowserRouter([
     path: "/reservations/:reservationId",
     element: <ChangeReservationData />,
   },
-  // {
-  //   path: '/books/:bookId',
-  //   element: <BookDetails />,
-  //   loader: loader(queryClient)
-  // },
-  // {
-  //   path: '/login',
-  //   element: <Login />
-  // },
-  // {
-  //   path: '/register',
-  //   element: <Register />
-  // },
-  // {
-  //   path: '/basket',
-  //   element: <Basket />
-  // },
-  // {
-  //   path: '/your-books',
-  //   element: <YourBooks />
-  // },
-  // {
-  //   path: '/stock',
-  //   element: <Stock />
-  // },
-  // {
-  //   path: '/users',
-  //   element: <Users />
-  // },
-  // {
-  //   path: '/add-book',
-  //   element: <AddBook />
-  // }
 ]);
 
 const queryClient = new QueryClient();

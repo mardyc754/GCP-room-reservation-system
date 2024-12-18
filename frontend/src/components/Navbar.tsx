@@ -5,7 +5,7 @@ export const Navbar = () => {
   const { mutate: signout } = useSignOutMutation();
 
   return (
-    <nav className="flex p-6 w-full border-b-2  justify-between items-center">
+    <nav className="flex p-6 w-full border-b-2 bg-card justify-between items-center">
       <div>
         <p className="text-2xl font-semibold">
           <a href="/">Room reservation</a>
@@ -14,6 +14,7 @@ export const Navbar = () => {
       <div className="flex items-center space-x-4">
         {data ? (
           <>
+            <a href="/create-reservation">Book a room</a>
             <a href="/reservations">Your reservations</a>
             <button onClick={() => signout()}>Sign out</button>
           </>

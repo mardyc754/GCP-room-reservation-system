@@ -47,8 +47,8 @@ export const createReservationResolver = zodResolver(createReservationSchema);
 export const changeReservationDataSchema = z
   .object({
     name: z.string().nonempty(),
-    startDate: z.string().datetime(),
-    endDate: z.string().datetime(),
+    startDate: z.string().transform((date) => new Date(date).toISOString()),
+    endDate: z.string().transform((date) => new Date(date).toISOString()),
     roomId: z.number().int(),
   })
   .refine(

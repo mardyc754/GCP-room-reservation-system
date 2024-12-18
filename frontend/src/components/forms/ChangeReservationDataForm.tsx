@@ -1,4 +1,9 @@
-import { endOfDay } from "@/utils/dateUtils";
+import {
+  advanceByMinutes,
+  endOfDay,
+  formatDateTime,
+  nextDay,
+} from "@/utils/dateUtils";
 
 import { FullReservationData, Reservation } from "@/schemas/reservation";
 
@@ -6,14 +11,19 @@ import { Button } from "../Button";
 import { LabelWithInput } from "../LabelWithInput";
 import { useChangeReservationData } from "@/hooks/useChangeReservationData";
 import { useReservation } from "@/hooks/useReservations";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 type ChangeReservationDataFormProps = {
-  // data: FullReservationData;
   reservationId: Reservation["id"];
 };
 
 type ChangeReservationDataFormContentProps = {
-  // data: FullReservationData;
   data: FullReservationData;
 };
 
@@ -22,51 +32,60 @@ const ChangeReservationDataFormContent = ({
 }: ChangeReservationDataFormContentProps) => {
   const {
     register,
-    getValues,
     onSubmit,
+    watch,
     formState: { errors },
-  } = useChangeReservationData({
-    selectedRoomId: data.roomId,
-    reservationId: data.id,
-  });
+  } = useChangeReservationData({ reservationData: data });
 
   return (
-    <>
-      <div className="flex w-full justify-between items-center">
-        <p>{data.roomName}</p>
-      </div>
-      <h2 className="text-2xl">New reservation data:</h2>
-      <form className="flex flex-col space-y-4" onSubmit={onSubmit}>
-        <LabelWithInput
-          label="Name"
-          inputProps={{
-            ...register("name", { required: true }),
-            defaultValue: data.name,
-          }}
-          errorLabel={errors.name?.message}
-        />
-        <LabelWithInput
-          label="Start date"
-          inputProps={{
-            ...register("startDate", { required: true }),
-            type: "datetime-local",
-            defaultValue: data.startDate,
-          }}
-          errorLabel={errors.startDate?.message}
-        />
-        <LabelWithInput
-          label="End date"
-          inputProps={{
-            ...register("endDate", { required: true }),
-            type: "datetime-local",
-            max: endOfDay(getValues("startDate")).toISOString(),
-            defaultValue: data.endDate,
-          }}
-          errorLabel={errors.endDate?.message}
-        />
-        <Button type="submit">Submit</Button>
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          <h1 className="text-2xl">{`Change reservation with id=${data.id} for the ${data.roomName}`}</h1>
+        </CardTitle>
+      </CardHeader>
+      <form onSubmit={onSubmit}>
+        <CardContent>
+          <LabelWithInput
+            label="Name"
+            inputProps={{
+              ...register("name", { required: true }),
+              defaultValue: data.name,
+            }}
+            errorLabel={errors.name?.message}
+          />
+          <LabelWithInput
+            label="Start date"
+            inputProps={{
+              ...register("startDate", { required: true }),
+              type: "datetime-local",
+              min: formatDateTime(nextDay(new Date())),
+            }}
+            errorLabel={errors.startDate?.message}
+          />
+          <LabelWithInput
+            label="End date"
+            inputProps={{
+              ...register("endDate", { required: true }),
+              type: "datetime-local",
+              min: formatDateTime(
+                advanceByMinutes(new Date(watch("startDate")), 30)
+              ),
+              max: formatDateTime(endOfDay(new Date(watch("startDate")))),
+            }}
+            errorLabel={errors.endDate?.message}
+          />
+        </CardContent>
+        <CardFooter className="flex flex-col space-y-4">
+          <Button type="submit" className="w-full">
+            Submit
+          </Button>
+          <Button className="w-full bg-black">
+            <a href="/reservations">Cancel</a>
+          </Button>
+        </CardFooter>
       </form>
-    </>
+    </Card>
   );
 };
 

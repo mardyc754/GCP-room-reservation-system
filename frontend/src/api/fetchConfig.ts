@@ -20,7 +20,7 @@ export const customFetch = async <T>(
     throw new Error(response.statusText);
   }
 
-  const res = schema.parse(await response.json());
+  const res = schema?.parse(await response.json());
 
   return res;
 };

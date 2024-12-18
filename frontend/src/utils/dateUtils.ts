@@ -26,6 +26,10 @@ export function displayDateWithHours(date: ConfigType) {
   return dayjs(date).format("DD.MM.YYYY HH:mm");
 }
 
+export function formatDateTime(date: ConfigType) {
+  return dayjs(date).format("YYYY-MM-DDTHH:mm");
+}
+
 export function mergeDayDateAndHourDate(
   dayDate: ConfigType,
   hourDate: ConfigType

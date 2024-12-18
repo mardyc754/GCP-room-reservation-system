@@ -14,7 +14,7 @@ export const ReservationForm = () => {
     <div className="flex flex-col space-y-4">
       {!selectedRoom ? (
         <>
-          <h2 className="text-2xl">Select a room:</h2>
+          <h1 className="text-2xl">Select a room:</h1>
           <div className="grid grid-cols-3 gap-4">
             {isLoading && <p>Loading...</p>}
             {data?.map((room) => (
@@ -25,10 +25,12 @@ export const ReservationForm = () => {
           </div>
         </>
       ) : (
-        <SelectDateForm
-          selectedRoom={selectedRoom}
-          onReturn={() => setSelectedRoom(null)}
-        />
+        <div className="flex flex-col space-y-4 items-center justify-center">
+          <SelectDateForm
+            selectedRoom={selectedRoom}
+            onReturn={() => setSelectedRoom(null)}
+          />
+        </div>
       )}
     </div>
   );

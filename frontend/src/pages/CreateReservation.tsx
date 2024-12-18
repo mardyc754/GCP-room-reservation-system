@@ -3,7 +3,7 @@ import { ReservationForm } from "@/components/forms/ReservationForm";
 
 export const CreateReservation = () => {
   return (
-    <PageWrapper title="Create a reservation">
+    <PageWrapper>
       <ReservationForm />
     </PageWrapper>
   );

@@ -7,9 +7,11 @@ export const ChangeReservationData = () => {
   const { reservationId } = useParams<{ reservationId: string }>();
 
   return (
-    <PageWrapper title="Change reservation data">
+    <PageWrapper>
       {reservationId && (
-        <ChangeReservationDataForm reservationId={parseInt(reservationId)} />
+        <div className="flex flex-col space-y-4 items-center justify-center">
+          <ChangeReservationDataForm reservationId={parseInt(reservationId)} />
+        </div>
       )}
     </PageWrapper>
   );

@@ -4,7 +4,14 @@ import { useCreateReservation } from "@/hooks/useCreateReservation";
 
 import { Button } from "../Button";
 import { LabelWithInput } from "../LabelWithInput";
-import { endOfDay } from "@/utils/dateUtils";
+import { endOfDay, formatDateTime } from "@/utils/dateUtils";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 type SelectDateFormProps = {
   selectedRoom: Room;
@@ -23,39 +30,48 @@ export const SelectDateForm = ({
   } = useCreateReservation({ selectedRoom });
 
   return (
-    <>
-      <div className="flex w-full justify-between items-center">
-        <p>Selected room: {selectedRoom.name}</p>
-        <Button onClick={onReturn}>Return</Button>
-      </div>
-      <h2 className="text-2xl">Select date:</h2>
-      <form className="flex flex-col space-y-4" onSubmit={onSubmit}>
-        <LabelWithInput
-          label="Name"
-          inputProps={{
-            ...register("name", { required: true }),
-          }}
-          errorLabel={errors.name?.message}
-        />
-        <LabelWithInput
-          label="Start date"
-          inputProps={{
-            ...register("startDate", { required: true }),
-            type: "datetime-local",
-          }}
-          errorLabel={errors.startDate?.message}
-        />
-        <LabelWithInput
-          label="End date"
-          inputProps={{
-            ...register("endDate", { required: true }),
-            type: "datetime-local",
-            max: endOfDay(getValues("startDate")).toISOString(),
-          }}
-          errorLabel={errors.endDate?.message}
-        />
-        <Button type="submit">Submit</Button>
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          <h1 className="text-2xl">{`Create a reservation for the ${selectedRoom.name}`}</h1>
+        </CardTitle>
+      </CardHeader>
+      <form onSubmit={onSubmit}>
+        <CardContent>
+          <LabelWithInput
+            label="Name"
+            inputProps={{
+              ...register("name", { required: true }),
+            }}
+            errorLabel={errors.name?.message}
+          />
+          <LabelWithInput
+            label="Start date"
+            inputProps={{
+              ...register("startDate", { required: true }),
+              type: "datetime-local",
+            }}
+            errorLabel={errors.startDate?.message}
+          />
+          <LabelWithInput
+            label="End date"
+            inputProps={{
+              ...register("endDate", { required: true }),
+              type: "datetime-local",
+              max: formatDateTime(endOfDay(getValues("startDate"))),
+            }}
+            errorLabel={errors.endDate?.message}
+          />
+        </CardContent>
+        <CardFooter className="flex flex-col space-y-4">
+          <Button className="w-full" type="submit">
+            Submit
+          </Button>
+          <Button className="w-full bg-black" onClick={onReturn}>
+            Return
+          </Button>
+        </CardFooter>
       </form>
-    </>
+    </Card>
   );
 };

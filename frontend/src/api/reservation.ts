@@ -5,14 +5,18 @@ import {
   Reservation,
   reservationSchema,
 } from "@/schemas/reservation";
-import { customFetch } from "./fetchConfig";
 import { Room } from "@/schemas/room";
 import { User } from "@/schemas/auth";
+
+import { customFetch } from "./fetchConfig";
 
 export const getReservationsByUserId = async (userId: number) => {
   return await customFetch(
     `reservations/user/${userId}`,
-    fullReservationSchema.array()
+    fullReservationSchema.array(),
+    {
+      credentials: "include",
+    }
   );
 };
 
@@ -29,6 +33,7 @@ export const createReservation = async (
   return await customFetch("reservations", reservationSchema, {
     method: "POST",
     body: JSON.stringify(data),
+    credentials: "include",
   });
 };
 
@@ -36,12 +41,17 @@ export const changeReservationData = async (
   reservationId: Reservation["id"],
   data: ChangeReservationData
 ) => {
-  return await customFetch(
-    `reservations/${reservationId}`,
-    fullReservationSchema,
-    {
-      method: "PUT",
-      body: JSON.stringify(data),
-    }
-  );
+  return await customFetch(`reservations/${reservationId}`, reservationSchema, {
+    method: "PUT",
+    body: JSON.stringify(data),
+    credentials: "include",
+  });
+};
+
+// TODO: not sure if should be deleted or its status should be changed to cancelled
+export const cancelReservation = async (reservationId: Reservation["id"]) => {
+  return await customFetch(`reservations/${reservationId}`, reservationSchema, {
+    method: "DELETE",
+    credentials: "include",
+  });
 };

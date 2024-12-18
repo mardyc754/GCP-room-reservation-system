@@ -1,3 +1,4 @@
+import { useCancelReservationData } from "@/hooks/useCancelReservation";
 import {
   Card,
   CardContent,
@@ -7,11 +8,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FullReservationData } from "@/schemas/reservation";
-import { Separator } from "./ui/separator";
 import {
   displayDatesAsTimeslot,
   extractDateStringFromDate,
 } from "@/utils/dateUtils";
+
+import { Separator } from "./ui/separator";
 import { Button } from "./Button";
 
 type ReservationCardProps = {
@@ -21,6 +23,9 @@ type ReservationCardProps = {
 export const ReservationCard = ({ data }: ReservationCardProps) => {
   const { name, startDate, endDate, roomName, id } = data;
 
+  const { mutate: cancelReservation } = useCancelReservationData({
+    reservationId: id,
+  });
   return (
     <Card>
       <CardHeader>
@@ -36,7 +41,9 @@ export const ReservationCard = ({ data }: ReservationCardProps) => {
         <Button>
           <a href={`reservations/${id}`}>Change data</a>
         </Button>
-        <Button>Cancel reservation</Button>
+        <Button className="bg-black" onClick={() => cancelReservation()}>
+          Cancel reservation
+        </Button>
       </CardFooter>
     </Card>
   );
