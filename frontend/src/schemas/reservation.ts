@@ -43,3 +43,23 @@ export const createReservationSchema = z
 export type CreateReservationData = z.infer<typeof createReservationSchema>;
 
 export const createReservationResolver = zodResolver(createReservationSchema);
+
+export const changeReservationDataSchema = z
+  .object({
+    name: z.string().nonempty(),
+    startDate: z.string().datetime(),
+    endDate: z.string().datetime(),
+    roomId: z.number().int(),
+  })
+  .refine(
+    (data) => {
+      return isAfterOrSame(new Date(data.endDate), new Date(data.startDate));
+    },
+    { message: "End date should occur after start date" }
+  );
+
+export type ChangeReservationData = z.infer<typeof changeReservationDataSchema>;
+
+export const changeReservationDataResolver = zodResolver(
+  changeReservationDataSchema
+);

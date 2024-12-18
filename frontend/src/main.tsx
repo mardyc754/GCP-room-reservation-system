@@ -11,10 +11,10 @@ import "./index.css";
 
 import { Home } from "./pages/Home";
 import { Reservations } from "./pages/Reservations";
-
 import { CreateReservation } from "./pages/CreateReservation";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
+import { ChangeReservationData } from "./pages/ChangeReservationData";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/sign-up",
     element: <Signup />,
+  },
+  {
+    path: "/reservations/:reservationId",
+    element: <ChangeReservationData />,
   },
   // {
   //   path: '/books/:bookId',

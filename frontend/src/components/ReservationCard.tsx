@@ -19,7 +19,8 @@ type ReservationCardProps = {
 };
 
 export const ReservationCard = ({ data }: ReservationCardProps) => {
-  const { name, startDate, endDate, roomName } = data;
+  const { name, startDate, endDate, roomName, id } = data;
+
   return (
     <Card>
       <CardHeader>
@@ -32,7 +33,9 @@ export const ReservationCard = ({ data }: ReservationCardProps) => {
         <p>{displayDatesAsTimeslot(startDate, endDate)}</p>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button>Change date</Button>
+        <Button>
+          <a href={`reservations/${id}`}>Change data</a>
+        </Button>
         <Button>Cancel reservation</Button>
       </CardFooter>
     </Card>

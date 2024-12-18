@@ -2,39 +2,42 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { createReservation } from "@/api/reservation";
+import { changeReservationData } from "@/api/reservation";
 import { reservation } from "@/constants/queryKeys";
 import {
-  CreateReservationData,
-  createReservationResolver,
+  ChangeReservationData,
+  changeReservationDataResolver,
+  Reservation,
 } from "@/schemas/reservation";
 import { Room } from "@/schemas/room";
 
 import { useCurrentUser } from "./auth";
 
-type UseCreateReservationOptions = {
-  selectedRoom: Room;
+type UseChangeReservationDataOptions = {
+  selectedRoomId: Room["id"];
+  reservationId: Reservation["id"];
 };
 
-export const useCreateReservation = ({
-  selectedRoom,
-}: UseCreateReservationOptions) => {
+export const useChangeReservationData = ({
+  selectedRoomId,
+  reservationId,
+}: UseChangeReservationDataOptions) => {
   const queryClient = useQueryClient();
 
   const navigate = useNavigate();
   const { data: currentUserData } = useCurrentUser();
-  const methods = useForm<CreateReservationData>({
-    resolver: createReservationResolver,
+
+  const methods = useForm<ChangeReservationData>({
+    resolver: changeReservationDataResolver,
   });
 
   const { handleSubmit, getValues } = methods;
 
   const mutation = useMutation({
     mutationFn: () =>
-      createReservation({
+      changeReservationData(reservationId, {
         ...getValues(),
-        roomId: selectedRoom.id,
-        userId: currentUserData!.id!,
+        roomId: selectedRoomId,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({

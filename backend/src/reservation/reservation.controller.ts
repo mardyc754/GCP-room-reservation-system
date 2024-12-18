@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import { CreateReservationDto } from '@/schemas/reservation';
+import { Reservation } from '@/db/schema';
 
 @Controller('reservations')
 export class ReservationController {
@@ -17,6 +18,11 @@ export class ReservationController {
   @Get()
   getAllReservations() {
     return this.reservationService.getAllReservations();
+  }
+
+  @Get(':id')
+  getReservationById(@Param('id', ParseIntPipe) id: Reservation['id']) {
+    return this.reservationService.getReservationById(id);
   }
 
   @Get('user/:userId')
