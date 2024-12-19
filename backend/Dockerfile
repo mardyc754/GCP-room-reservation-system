@@ -14,4 +14,4 @@ RUN pnpm run build
 
 EXPOSE 8080
 
-CMD ["pnpm", "start:prod"]
+CMD ["pnpm", "start"]
