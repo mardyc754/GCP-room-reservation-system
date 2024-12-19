@@ -33,10 +33,10 @@ export class ReservationService {
     return await this.drizzleService.db
       .select({
         id: reservations.id,
+        name: reservations.name,
         roomId: reservations.roomId,
         startDate: reservations.startDate,
         endDate: reservations.endDate,
-        roomName: rooms.name,
       })
       .from(reservations)
       .where(eq(reservations.roomId, roomId))

@@ -47,6 +47,11 @@ export class ReservationController {
     return this.reservationService.getReservationsByUserId(userId);
   }
 
+  @Get('room/:roomId')
+  getReservationsByRoomId(@Param('roomId', ParseIntPipe) roomId: number) {
+    return this.reservationService.getReservationsByRoomId(roomId);
+  }
+
   @UseGuards(AuthGuard)
   @Post()
   @HttpCode(201)

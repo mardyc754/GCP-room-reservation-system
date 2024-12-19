@@ -3,6 +3,7 @@ export const reservation = {
   user: (userId: number) => [...reservation.all, "user", `${userId}`] as const,
   byId: (reservationId: number) =>
     [...reservation.all, "id", `${reservationId}`] as const,
+  room: (roomId: number) => [...reservation.all, "room", `${roomId}`] as const,
 };
 
 export const room = {

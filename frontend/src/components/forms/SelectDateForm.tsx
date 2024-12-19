@@ -1,10 +1,9 @@
 import { Room } from "@/schemas/room";
 
+import { useConflictingReservations } from "@/hooks/useConflictingReservations";
 import { useCreateReservation } from "@/hooks/useCreateReservation";
-
-import { Button } from "../Button";
-import { LabelWithInput } from "../LabelWithInput";
 import { endOfDay, formatDateTime } from "@/utils/dateUtils";
+
 import {
   Card,
   CardContent,
@@ -12,6 +11,9 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { Button } from "../Button";
+import { LabelWithInput } from "../LabelWithInput";
+import { ConflictingReservationInfo } from "../ConflictingReservationInfo";
 
 type SelectDateFormProps = {
   selectedRoom: Room;
@@ -25,10 +27,37 @@ export const SelectDateForm = ({
   const {
     register,
     onSubmit,
-    getValues,
+    watch,
     formState: { errors },
   } = useCreateReservation({ selectedRoom });
 
+  const { conflictingReservation, disableSubmitButton, isLoading } =
+    useConflictingReservations({
+      startDate: watch("startDate"),
+      endDate: watch("endDate"),
+      roomId: selectedRoom.id,
+      errors,
+    });
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            <h1 className="text-2xl">{`Create a reservation for the ${selectedRoom.name}`}</h1>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>Loading...</p>
+        </CardContent>
+        <CardFooter className="flex flex-col space-y-4">
+          <Button className="w-full bg-black" onClick={onReturn}>
+            Return
+          </Button>
+        </CardFooter>
+      </Card>
+    );
+  }
   return (
     <Card>
       <CardHeader>
@@ -58,15 +87,22 @@ export const SelectDateForm = ({
             inputProps={{
               ...register("endDate", { required: true }),
               type: "datetime-local",
-              max: formatDateTime(endOfDay(getValues("startDate"))),
+              max: formatDateTime(endOfDay(watch("startDate"))),
             }}
             errorLabel={errors.endDate?.message}
           />
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          <Button className="w-full" type="submit">
+          <Button
+            className="w-full"
+            type="submit"
+            disabled={disableSubmitButton}
+          >
             Submit
           </Button>
+          {conflictingReservation && (
+            <ConflictingReservationInfo data={conflictingReservation} />
+          )}
           <Button className="w-full bg-black" onClick={onReturn}>
             Return
           </Button>

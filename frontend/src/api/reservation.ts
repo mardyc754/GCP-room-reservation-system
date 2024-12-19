@@ -27,6 +27,13 @@ export const getReservationById = async (reservationId: Reservation["id"]) => {
   );
 };
 
+export const getReservationsByRoomId = async (roomId: Room["id"]) => {
+  return await customFetch(
+    `reservations/room/${roomId}`,
+    reservationSchema.omit({ userId: true }).array()
+  );
+};
+
 export const createReservation = async (
   data: CreateReservationData & { roomId: Room["id"]; userId: User["id"] }
 ) => {

@@ -18,6 +18,8 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { useConflictingReservations } from "@/hooks/useConflictingReservations";
+import { ConflictingReservationInfo } from "../ConflictingReservationInfo";
 
 type ChangeReservationDataFormProps = {
   reservationId: Reservation["id"];
@@ -36,6 +38,14 @@ const ChangeReservationDataFormContent = ({
     watch,
     formState: { errors },
   } = useChangeReservationData({ reservationData: data });
+
+  const { conflictingReservation, disableSubmitButton } =
+    useConflictingReservations({
+      startDate: watch("startDate"),
+      endDate: watch("endDate"),
+      roomId: data.roomId,
+      errors,
+    });
 
   return (
     <Card>
@@ -77,9 +87,16 @@ const ChangeReservationDataFormContent = ({
           />
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          <Button type="submit" className="w-full">
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={disableSubmitButton}
+          >
             Submit
           </Button>
+          {conflictingReservation && (
+            <ConflictingReservationInfo data={conflictingReservation} />
+          )}
           <Button className="w-full bg-black">
             <a href="/reservations">Cancel</a>
           </Button>
