@@ -1,5 +1,0 @@
-Project number: 321212193587 
-PROJECT_ID=gcp-room-reservation-system 
-
-gcloud config list
-gcloud config set project gcp-room-reservation-system 
