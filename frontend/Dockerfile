@@ -10,8 +10,10 @@ RUN pnpm i
 
 COPY . .
 
-RUN pnpm run build
+COPY .env .env
 
 EXPOSE 3000
+
+RUN pnpm run build
 
 CMD ["pnpm", "start"]

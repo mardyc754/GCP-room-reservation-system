@@ -6,7 +6,7 @@ export const customFetch = async <T>(
   init?: RequestInit
 ) => {
   const response = await fetch(
-    `${await import.meta.env.VITE_BACKEND_BASE_URL}/${input}`,
+    `${import.meta.env.VITE_BACKEND_BASE_URL}/${input}`,
     {
       ...init,
       headers: {

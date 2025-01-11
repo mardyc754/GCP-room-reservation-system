@@ -10,8 +10,12 @@ RUN pnpm i
 
 COPY . .
 
+COPY .env .env
+
 RUN pnpm run build
 
 EXPOSE 8080
+
+RUN pnpm run migrate
 
 CMD ["pnpm", "start"]
