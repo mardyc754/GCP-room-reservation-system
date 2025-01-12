@@ -33,6 +33,7 @@ export class UserService {
       };
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
+      console.log(error);
       throw new BadRequestException(
         'User with this email or username already exists',
       );

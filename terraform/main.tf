@@ -142,11 +142,11 @@ resource "google_cloud_run_service_iam_binding" "backend_binding" {
 #       containers {
 #         image = "gcr.io/gcp-room-reservation-system/your-container-image" # Replace with your image
 #         env {
-#           name  = "POSTGRES_HOST"
+#           name  = "DB_HOST"
 #           value = google_sql_database_instance.default.connection_name
 #         }
 #         env {
-#           name  = "POSTGRES_USER"
+#           name  = "DB_USER"
 #           value = google_sql_user.users.name
 #         }
 #         env {
@@ -154,11 +154,11 @@ resource "google_cloud_run_service_iam_binding" "backend_binding" {
 #           value = google_sql_user.users.password
 #         }
 #         env {
-#           name  = "POSTGRES_DB"
+#           name  = "DB_NAME"
 #           value = google_sql_database.default.name
 #         }
 #         env {
-#           name  = "POSTGRES_PORT"
+#           name  = "DB_PORT"
 #           value = "8080"
 #         }
 #         env {

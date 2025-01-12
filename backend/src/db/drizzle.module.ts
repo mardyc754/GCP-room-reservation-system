@@ -18,12 +18,12 @@ import { DrizzleService } from './drizzle.service';
       inject: [DATABASE_OPTIONS],
       useFactory: (databaseOptions: DatabaseOptions) => {
         return new Pool({
-          connectionString: databaseOptions.connectionString,
+          // connectionString: databaseOptions.connectionString,
           // host: databaseOptions.host,
-          // port: databaseOptions.port,
-          // user: databaseOptions.user,
-          // password: databaseOptions.password,
-          // database: databaseOptions.database,
+          port: databaseOptions.port,
+          user: databaseOptions.user,
+          password: databaseOptions.password,
+          database: databaseOptions.database,
         });
       },
     },
