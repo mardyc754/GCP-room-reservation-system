@@ -5,14 +5,20 @@ export const customFetch = async <T>(
   schema: ZodType<T>,
   init?: RequestInit
 ) => {
-  console.debug(process.env.BACKEND_BASE_URL);
-  const response = await fetch(`${process.env.BACKEND_BASE_URL}/${input}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...init?.headers,
-    },
-  });
+  // const response = await fetch(`${process.env.BACKEND_BASE_URL}/${input}`, {
+  const response = await fetch(
+    `${
+      process.env.BACKEND_BASE_URL ??
+      "https://room-reservation-backend-321212193587.europe-west1.run.app"
+    }/${input}`,
+    {
+      ...init,
+      headers: {
+        "Content-Type": "application/json",
+        ...init?.headers,
+      },
+    }
+  );
 
   if (!response.ok) {
     throw new Error(response.statusText);
