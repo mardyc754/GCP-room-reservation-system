@@ -38,6 +38,101 @@ resource "google_sql_database" "default" {
   instance = google_sql_database_instance.default.name
 }
 
+resource "google_cloud_run_service" "frontend" {
+  location                   = var.region
+  name                       = "room-reservation-frontend"
+  project                    = var.project_id
+  metadata {
+    namespace   = var.project_id
+  }
+  template {
+    spec {
+      containers {
+        # image   = "europe-west1-docker.pkg.dev/gcp-room-reservation-system/cloud-run-source-deploy/gcp-room-reservation-system/room-reservation-frontend:c6eadbd02b3eba9f4c9a94cd5bed14e99a8bba9e"
+        image = "europe-west1-docker.pkg.dev/gcp-room-reservation-system/cloud-run-source-deploy/gcp-room-reservation-system/room-reservation-frontend:d6acd1f5ac88ce6701938498bb60a462f2fe9316"
+        env {
+          name  = "BACKEND_BASE_URL"
+          value = "https://room-reservation-backend-321212193587.europe-west1.run.app"
+        }
+        ports {
+          container_port = 3000
+        }
+        resources {
+          limits = {
+            cpu    = "1000m"
+            memory = "512Mi"
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "google_cloud_run_service" "backend" {
+  location                   = var.region
+  name                       = "room-reservation-backend"
+  project                    = var.project_id
+  metadata {
+    namespace   = var.project_id
+  }
+  template {
+    spec {
+      containers {
+        image   = "europe-west1-docker.pkg.dev/gcp-room-reservation-system/cloud-run-source-deploy/gcp-room-reservation-system/room-reservation-backend:3a25e4cf3f3196402a8d4952154fbef7273c55b2"
+        name    = "placeholder-1"
+        env {
+          name  = "DATABASE_URL"
+          value = "DATABASE_URL=postgres://db_user:db_password@34.78.7.13:5432/reservation_db"
+        }
+        env {
+          name  = "FRONTEND_BASE_URL"
+          value = "https://room-reservation-frontend-321212193587.europe-west1.run.app"
+        }
+        ports {
+          container_port = 8080
+        }
+        resources {
+          limits = {
+            cpu    = "1000m"
+            memory = "512Mi"
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "google_cloud_run_service_iam_binding" "frontend_binding" {
+  location = google_cloud_run_service.frontend.location
+  service  = google_cloud_run_service.frontend.name
+  role     = "roles/run.invoker"
+  members = [
+    "allUsers"
+  ]
+}
+
+resource "google_cloud_run_service_iam_binding" "backend_binding" {
+  location = google_cloud_run_service.backend.location
+  service  = google_cloud_run_service.backend.name
+  role     = "roles/run.invoker"
+  members = [
+    "allUsers"
+  ]
+}
+
+
+
+
+# resource "google_cloud_run_service" "frontend" {
+#   name     = "room-reservation-frontend"
+#   location = var.region
+# }
+
+# resource "google_cloud_run_service" "backend" {
+#   name     = "room-reservation-backend"
+#   location = var.region
+# }
+
 # resource "google_cloud_run_service" "backend" {
 #   name     = "room-reservation-backend"
 #   location = "europe-west1"
@@ -83,21 +178,29 @@ resource "google_sql_database" "default" {
 
 # resource "google_cloud_run_service" "frontend" {
 #   name     = "room-reservation-frontend"
-#   location = "europe-west1"
+#   location = var.region
+#   project  = var.project_id
 
 #   template {
 #     spec {
 #       containers {
-#         image = "gcr.io/gcp-room-reservation-system/your-container-image" # Replace with your image
+#         image = "europe-west1-docker.pkg.dev/gcp-room-reservation-system/cloud-run-source-deploy/gcp-room-reservation-system/room-reservation-frontend"
+#         # image = "gcr.io/gcp-room-reservation-system/your-container-image" # Replace with your image
 #         env {
 #           name  = "VITE_BACKEND_BASE_URL"
-#           value = google_cloud_run_service.backend.status[0].url
+#           # value = google_cloud_run_service.backend.status[0].url
+#           value = "https://room-reservation-backend-321212193587.europe-west1.run.app"
+#         }
+
+#         ports {
+#           container_port = "3000"
 #         }
 #       }
 #     }
 #   }
 #   # depends_on = [google_project_iam_binding.sql_client_role]
 # }
+
 
 # resource "google_service_account" "cloud_run_sa" {
 #   account_id   = "cloud-run-sa"
@@ -109,6 +212,14 @@ resource "google_sql_database" "default" {
 #   members = ["serviceAccount:${google_service_account.cloud_run_sa.email}"]
 # }
 
+# resource "google_cloud_run_service_iam_binding" "default" {
+#   location = google_cloud_run_service.tfer--gcp-room-reservation-system-europe-west1-room-reservation-frontend-0.location
+#   service  = google_cloud_run_service.tfer--gcp-room-reservation-system-europe-west1-room-reservation-frontend-0.location
+#   role     = "roles/run.invoker"
+#   members = [
+#     "allUsers"
+#   ]
+# }
 
 
 # resource "google_cloud_run_service_iam_member" "invoke" {

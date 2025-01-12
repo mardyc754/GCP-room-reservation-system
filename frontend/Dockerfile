@@ -10,7 +10,7 @@ RUN pnpm i
 
 COPY . .
 
-ENV VITE_BACKEND_BASE_URL='https://room-reservation-backend-321212193587.europe-west1.run.app'
+ENV NODE_ENV production
 
 EXPOSE 3000
 

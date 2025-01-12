@@ -5,16 +5,14 @@ export const customFetch = async <T>(
   schema: ZodType<T>,
   init?: RequestInit
 ) => {
-  const response = await fetch(
-    `${import.meta.env.VITE_BACKEND_BASE_URL}/${input}`,
-    {
-      ...init,
-      headers: {
-        "Content-Type": "application/json",
-        ...init?.headers,
-      },
-    }
-  );
+  console.debug(process.env.BACKEND_BASE_URL);
+  const response = await fetch(`${process.env.BACKEND_BASE_URL}/${input}`, {
+    ...init,
+    headers: {
+      "Content-Type": "application/json",
+      ...init?.headers,
+    },
+  });
 
   if (!response.ok) {
     throw new Error(response.statusText);
