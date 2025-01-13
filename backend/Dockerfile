@@ -10,15 +10,15 @@ RUN pnpm i
 
 COPY . .
 
-ARG FRONTEND_BASE_URL
-ARG DATABASE_URL
-ENV FRONTEND_BASE_URL=$FRONTEND_BASE_URL
-ENV DATABASE_URL=$DATABASE_URL
-
 RUN pnpm run build
 
 EXPOSE 8080
 
-RUN pnpm run migrate
+ENV DB_HOST='35.187.127.205'
+ENV DB_PORT=5432
+ENV DB_USER='db_user'
+ENV DB_PASS='db_password'
+ENV DB_NAME='room-reservation-db'
+ENV FRONTEND_BASE_URL='https://room-reservation-frontend-321212193587.europe-west1.run.app'
 
 CMD ["pnpm", "start"]

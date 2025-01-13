@@ -30,7 +30,7 @@ import { DrizzleService } from './drizzle.service';
         return new Pool({
           ...clientOpts,
           // connectionString: databaseOptions.connectionString,
-          // host: databaseOptions.host,
+          host: databaseOptions.host,
           user: databaseOptions.user,
           password: databaseOptions.password,
           database: databaseOptions.database,

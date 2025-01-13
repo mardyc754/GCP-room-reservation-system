@@ -1,5 +1,5 @@
 export interface DatabaseOptions {
-  // host: string;
+  host: string;
   port?: number;
   user: string;
   password: string;

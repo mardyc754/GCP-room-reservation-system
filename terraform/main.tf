@@ -106,7 +106,7 @@ resource "google_cloud_run_service" "backend" {
         }
         env {
           name = "FRONTEND_BASE_URL"
-          value = google_cloud_run_service.frontend.status[0].url
+          value = "https://room-reservation-frontend-321212193587.europe-west1.run.app"
         }
         ports {
           container_port = 8080

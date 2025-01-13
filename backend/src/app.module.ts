@@ -21,13 +21,11 @@ import { AuthModule } from './auth/auth.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         // connectionString: configService.get<string>('DATABASE_URL')!,
-        // host: configService.get('DB_HOST')!,
         host: configService.get('DB_HOST')!,
         port: configService.get('DB_PORT') || 5432,
         user: configService.get('DB_USER')!,
         password: configService.get('DB_PASS')!,
         database: configService.get('DB_NAME')!,
-        // ssl: configService.get('DATABASE_URL') ? true : false,
         ssl: false,
       }),
     }),

@@ -12,8 +12,9 @@ COPY . .
 
 ENV NODE_ENV production
 
+RUN pnpm run build
+
 EXPOSE 3000
 
-RUN pnpm run build
 
 CMD ["pnpm", "start"]
