@@ -81,12 +81,32 @@ resource "google_cloud_run_service" "backend" {
         image   = "europe-west1-docker.pkg.dev/gcp-room-reservation-system/cloud-run-source-deploy/gcp-room-reservation-system/room-reservation-backend:3a25e4cf3f3196402a8d4952154fbef7273c55b2"
         name    = "placeholder-1"
         env {
-          name  = "DATABASE_URL"
-          value = "DATABASE_URL=postgres://db_user:db_password@34.78.7.13:5432/reservation_db"
+          name  = "DB_HOST"
+          value = google_sql_database_instance.default.ip_address.0.ip_address
         }
         env {
-          name  = "FRONTEND_BASE_URL"
-          value = "https://room-reservation-frontend-321212193587.europe-west1.run.app"
+          name  = "DB_USER"
+          value = google_sql_user.users.name
+        }
+        env {
+          name  = "POSTGRESS_PASSWORD"
+          value = google_sql_user.users.password
+        }
+        env {
+          name  = "DB_NAME"
+          value = google_sql_database.default.name
+        }
+        env {
+          name  = "DB_PORT"
+          value = "5432"
+        }
+        env {
+          name  = "JWT_SECRET"
+          value = "someverylongsecretkeythatshouldnotbeinproduction"
+        }
+        env {
+          name = "FRONTEND_BASE_URL"
+          value = google_cloud_run_service.frontend.status[0].url
         }
         ports {
           container_port = 8080
