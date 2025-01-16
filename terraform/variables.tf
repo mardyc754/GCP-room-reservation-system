@@ -40,3 +40,20 @@ variable "db_instance_name" {
   default     = "room-reservation-db"
 }
 
+variable "email_user" {
+  description = "The email address of the user"
+  type        = string
+  default     = "mdtest754@gmail.com"
+}
+
+variable "email_pass" {
+  description = "The password of the email user"
+  type        = string
+  default     = "toua spmh hgat esmd"
+}
+
+variable "pubsub_topic_name" {
+  description = "The name of the pub/sub topic"
+  type        = string
+  default     = "send-email"
+}

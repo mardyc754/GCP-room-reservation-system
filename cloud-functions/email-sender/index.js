@@ -1,10 +1,14 @@
 import "dotenv/config";
 import nodemailer from "nodemailer";
-// Cloud Function
-export const sendEmailNotification = async (req, res) => {
+
+export const sendEmailNotification = async (event, context) => {
   try {
+    const pubSubMessage = event.data
+      ? JSON.parse(Buffer.from(event.data, "base64").toString())
+      : {};
+
     // Parse request body for email details
-    const { to, subject, message } = req.body;
+    const { to, subject, message } = pubSubMessage;
 
     if (!to || !subject || !message) {
       return res

@@ -1,0 +1,11 @@
+{
+  "name": "daily-reminder",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@google-cloud/pubsub": "^4.9.0",
+    "dotenv": "^16.4.7",
+    "pg": "^8.13.1"
+  }
+}
