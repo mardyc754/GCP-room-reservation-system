@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "@google-cloud/cloud-sql-connector": "^1.6.0",
+    "@google-cloud/functions-framework": "^3.4.5",
     "@google-cloud/pubsub": "^4.9.0",
     "dotenv": "^16.4.7",
     "pg": "^8.13.1"

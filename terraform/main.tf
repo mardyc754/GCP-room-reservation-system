@@ -48,8 +48,7 @@ resource "google_cloud_run_service" "frontend" {
   template {
     spec {
       containers {
-        # image   = "europe-west1-docker.pkg.dev/gcp-room-reservation-system/cloud-run-source-deploy/gcp-room-reservation-system/room-reservation-frontend:c6eadbd02b3eba9f4c9a94cd5bed14e99a8bba9e"
-        image = "europe-west1-docker.pkg.dev/gcp-room-reservation-system/cloud-run-source-deploy/gcp-room-reservation-system/room-reservation-frontend:d6acd1f5ac88ce6701938498bb60a462f2fe9316"
+        image   = "europe-west1-docker.pkg.dev/gcp-room-reservation-system/cloud-run-source-deploy/gcp-room-reservation-system/room-reservation-frontend:d86abab2beb92dd5d3204bcca69385c687445686"
         ports {
           container_port = 3000
         }
@@ -195,11 +194,20 @@ resource "google_cloudfunctions_function" "daily_reminder" {
     DB_USER = var.db_user
     DB_PASS = var.db_password
     DB_NAME = var.db_name
-    DB_INSTANCE_NAME = var.db_instance_name
-    DB_HOST = google_sql_database_instance.default.connection_name
+    DB_HOST = google_sql_database_instance.default.first_ip_address
     DB_PORT = "5432"
+    PROJECT_ID = var.project_id
   }
 }
+
+resource "google_cloudfunctions_function_iam_member" "daily_email_invoker" {
+  project        = var.project_id
+  region         = var.region
+  cloud_function = google_cloudfunctions_function.daily_reminder.name
+  role           = "roles/cloudfunctions.invoker"
+  member        = "allUsers"
+}
+
 
 
 resource "google_project_iam_member" "project_invoker" {

@@ -1,23 +1,23 @@
 import "dotenv/config";
+import functions from "@google-cloud/functions-framework";
+import pg from "pg";
 import { PubSub } from "@google-cloud/pubsub";
+
 import { Connector, IpAddressTypes } from "@google-cloud/cloud-sql-connector";
-import pkg from "pg";
 
-const pubSubClient = new PubSub();
+functions.http("dailyReminder", async (req, res) => {
+  console.log("Starting daily reminder function");
+  const pubSubClient = new PubSub({ projectId: process.env.projectId });
 
-export const dailyReminder = async () => {
   try {
-    const { Pool } = pkg;
-
     const connector = new Connector();
-
+    console.log("Getting the database connection options");
     const clientOpts = await connector.getOptions({
       instanceConnectionName:
         "gcp-room-reservation-system:europe-west1:room-reservation-db",
       ipType: IpAddressTypes.PUBLIC,
     });
-
-    const pool = new Pool({
+    const pool = new pg.Pool({
       ...clientOpts,
       user: process.env.DB_USER,
       host: process.env.DB_HOST,
@@ -26,16 +26,14 @@ export const dailyReminder = async () => {
       port: process.env.DB_PORT,
     });
 
-    const client = await pool.connect();
-
-    const [rows] = await client.execute(
+    const result = await pool.query(
       "SELECT * FROM reservations JOIN users ON reservations.user_id = users.id WHERE Date(start_date) = $1",
       [new Intl.DateTimeFormat("en-CA").format(new Date())]
     );
 
-    console.log("Number of reservations: ", rows.length);
+    console.log("Number of reservations: ", result.rows.length);
 
-    const reservations = rows.map((row) => {
+    const reservations = result.rows.map((row) => {
       return {
         id: row.id,
         userId: row.userId,
@@ -57,14 +55,17 @@ export const dailyReminder = async () => {
       };
 
       const dataBuffer = Buffer.from(JSON.stringify(message));
+
       await pubSubClient
         .topic("send-email")
         .publishMessage({ data: dataBuffer });
     }
     console.log("Number of emails sent: ", reservations.length);
+
+    return res.status(200).send("Daily reminder emails sent successfully!");
   } catch (error) {
+    console.error("Error sending daily reminder emails: ", error);
     console.error(error);
-  } finally {
-    await client.end();
+    return res.status(500).send("Failed to send daily reminder emails.");
   }
-};
+});
