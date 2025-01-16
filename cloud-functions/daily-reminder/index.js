@@ -5,6 +5,16 @@ import { PubSub } from "@google-cloud/pubsub";
 
 import { Connector, IpAddressTypes } from "@google-cloud/cloud-sql-connector";
 
+function formatDate(date) {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${day}.${month}.${year} ${hours}:${minutes}`;
+}
+
 functions.http("dailyReminder", async (req, res) => {
   console.log("Starting daily reminder function");
   const pubSubClient = new PubSub({ projectId: process.env.projectId });
@@ -36,12 +46,13 @@ functions.http("dailyReminder", async (req, res) => {
     const reservations = result.rows.map((row) => {
       return {
         id: row.id,
-        userId: row.userId,
-        startDate: row.startDate,
-        endDate: row.endDate,
+        roomId: row.room_id,
+        userId: row.user_id,
+        startDate: row.start_date,
+        endDate: row.end_date,
         user: {
           id: row.userId,
-          name: row.name,
+          name: row.username,
           email: row.email,
         },
       };
@@ -51,7 +62,11 @@ functions.http("dailyReminder", async (req, res) => {
       const message = {
         to: reservation.user.email,
         subject: "Daily Reminder",
-        message: `Hello ${reservation.user.name}, your reservation is scheduled to start at ${reservation.startDate} and end at ${reservation.endDate}.`,
+        message: `Hello ${reservation.user.name}, your reservation in room ${
+          reservation.roomId
+        } is scheduled to start at ${formatDate(
+          reservation.startDate
+        )} and end at ${formatDate(reservation.endDate)}.`,
       };
 
       const dataBuffer = Buffer.from(JSON.stringify(message));
@@ -64,7 +79,7 @@ functions.http("dailyReminder", async (req, res) => {
 
     return res.status(200).send("Daily reminder emails sent successfully!");
   } catch (error) {
-    console.error("Error sending daily reminder emails: ", error);
+    console.error("Error sending daily reminder emails: ");
     console.error(error);
     return res.status(500).send("Failed to send daily reminder emails.");
   }

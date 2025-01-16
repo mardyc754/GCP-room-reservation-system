@@ -1,19 +1,22 @@
 import "dotenv/config";
+
+import functions from "@google-cloud/functions-framework";
 import nodemailer from "nodemailer";
 
-export const sendEmailNotification = async (event, context) => {
+functions.cloudEvent("sendEmailNotification", async (event) => {
   try {
+    console.log("Starting send email notification function");
+
     const pubSubMessage = event.data
-      ? JSON.parse(Buffer.from(event.data, "base64").toString())
+      ? JSON.parse(Buffer.from(event.data.message.data, "base64").toString())
       : {};
 
     // Parse request body for email details
     const { to, subject, message } = pubSubMessage;
 
     if (!to || !subject || !message) {
-      return res
-        .status(400)
-        .send("Missing required fields: to, subject, or message.");
+      console.error("Missing required fields: to, subject, or message.");
+      return;
     }
 
     // Configure Nodemailer transport
@@ -30,7 +33,7 @@ export const sendEmailNotification = async (event, context) => {
 
     // Email options
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `Room Reservation System <${process.env.EMAIL_USER}>`,
       to,
       subject,
       text: message,
@@ -40,9 +43,9 @@ export const sendEmailNotification = async (event, context) => {
     const info = await transporter.sendMail(mailOptions);
 
     console.log("Email sent: ", info.response);
-    res.status(200).send("Email sent successfully!");
+    console.log("Email sent successfully!");
+    transporter.close();
   } catch (error) {
     console.error("Error sending email: ", error);
-    res.status(500).send("Failed to send email.");
   }
-};
+});

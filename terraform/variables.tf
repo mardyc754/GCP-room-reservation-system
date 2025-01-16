@@ -43,13 +43,13 @@ variable "db_instance_name" {
 variable "email_user" {
   description = "The email address of the user"
   type        = string
-  default     = "mdtest754@gmail.com"
+  sensitive   = true
 }
 
 variable "email_pass" {
   description = "The password of the email user"
   type        = string
-  default     = "toua spmh hgat esmd"
+  sensitive  = true
 }
 
 variable "pubsub_topic_name" {
