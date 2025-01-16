@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { PubSub } from "@google-cloud/pubsub";
+import { Connector, IpAddressTypes } from "@google-cloud/cloud-sql-connector";
 import pkg from "pg";
 
 const pubSubClient = new PubSub();
@@ -8,7 +9,16 @@ export const dailyReminder = async () => {
   try {
     const { Pool } = pkg;
 
+    const connector = new Connector();
+
+    const clientOpts = await connector.getOptions({
+      instanceConnectionName:
+        "gcp-room-reservation-system:europe-west1:room-reservation-db",
+      ipType: IpAddressTypes.PUBLIC,
+    });
+
     const pool = new Pool({
+      ...clientOpts,
       user: process.env.DB_USER,
       host: process.env.DB_HOST,
       database: process.env.DB_NAME,
@@ -19,8 +29,8 @@ export const dailyReminder = async () => {
     const client = await pool.connect();
 
     const [rows] = await client.execute(
-      "SELECT * FROM reservations WHERE startDate = $1 JOIN users ON reservations.userId = users.id",
-      [new Date().getHours()]
+      "SELECT * FROM reservations JOIN users ON reservations.user_id = users.id WHERE Date(start_date) = $1",
+      [new Intl.DateTimeFormat("en-CA").format(new Date())]
     );
 
     console.log("Number of reservations: ", rows.length);
