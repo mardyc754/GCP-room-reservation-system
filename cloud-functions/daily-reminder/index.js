@@ -51,7 +51,7 @@ functions.http("dailyReminder", async (req, res) => {
         startDate: row.start_date,
         endDate: row.end_date,
         user: {
-          id: row.userId,
+          id: row.user_id,
           name: row.username,
           email: row.email,
         },

@@ -10,6 +10,7 @@ import { DatabaseModule } from './db/drizzle.module';
 import { APP_PIPE } from '@nestjs/core';
 import { RoomModule } from './room/room.module';
 import { AuthModule } from './auth/auth.module';
+import { PubSubModule } from './pubsub/pubsub.module';
 
 @Module({
   imports: [
@@ -31,6 +32,13 @@ import { AuthModule } from './auth/auth.module';
     }),
     RoomModule,
     AuthModule,
+    PubSubModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        projectId: configService.get('PROJECT_ID')!,
+      }),
+    }),
   ],
   controllers: [AppController],
   providers: [

@@ -21,5 +21,6 @@ ENV DB_PASS='db_password'
 ENV DB_NAME='room-reservation-db'
 ENV JWT_SECRET someverylongsecretkeythatshouldnotbeinproduction
 ENV FRONTEND_BASE_URL='https://room-reservation-frontend-321212193587.europe-west1.run.app'
+ENV PROJECT_ID='gcp-room-reservation-system'
 
 CMD ["pnpm", "start"]
